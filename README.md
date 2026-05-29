@@ -1,0 +1,1 @@
+# ingestao-busca-semantica-langchain
