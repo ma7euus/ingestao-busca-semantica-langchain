@@ -64,6 +64,8 @@ GOOGLE_API_KEY=sua-chave
 GEMINI_EMBEDDING_MODEL=gemini-embedding-001
 ```
 
+`AI_PROVIDER=gemini` e obrigatorio para usar Gemini. Se essa linha estiver como `AI_PROVIDER=openai`, o projeto vai chamar a API da OpenAI mesmo que `GOOGLE_API_KEY` tambem esteja preenchida.
+
 Use o mesmo provedor na ingestao e na busca. Se trocar de OpenAI para Gemini, rode `python src/ingest.py` novamente para recriar os vetores.
 
 ## Execucao
@@ -128,6 +130,12 @@ Opcoes:
 AI_PROVIDER=gemini
 GOOGLE_API_KEY=sua-chave-google
 GEMINI_EMBEDDING_MODEL=gemini-embedding-001
+```
+
+Depois confirme se o `.env` esta usando Gemini:
+
+```bash
+grep '^AI_PROVIDER=' .env
 ```
 
 Depois rode novamente:
