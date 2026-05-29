@@ -44,6 +44,15 @@ def _require_env(name: str) -> str:
     return value
 
 
+def _gemini_model_name(name: str) -> str:
+    model = name.strip()
+    if model in {"embedding-001", "models/embedding-001"}:
+        return "gemini-embedding-001"
+    if model.startswith("models/"):
+        return model.removeprefix("models/")
+    return model
+
+
 def get_embeddings():
     provider = _provider("embedding")
 
@@ -60,7 +69,9 @@ def get_embeddings():
         from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
         return GoogleGenerativeAIEmbeddings(
-            model=os.getenv("GEMINI_EMBEDDING_MODEL", "models/embedding-001")
+            model=_gemini_model_name(
+                os.getenv("GEMINI_EMBEDDING_MODEL", "gemini-embedding-001")
+            )
         )
 
     raise RuntimeError(f"Provedor de embeddings nao suportado: {provider}")
@@ -80,7 +91,7 @@ def get_llm():
         from langchain_google_genai import ChatGoogleGenerativeAI
 
         return ChatGoogleGenerativeAI(
-            model=os.getenv("GEMINI_LLM_MODEL", "gemini-2.5-flash-lite")
+            model=_gemini_model_name(os.getenv("GEMINI_LLM_MODEL", "gemini-2.5-flash-lite"))
         )
 
     raise RuntimeError(f"Provedor de LLM nao suportado: {provider}")

@@ -1,5 +1,14 @@
 from __future__ import annotations
 
+import sys
+import warnings
+
+warnings.filterwarnings(
+    "ignore",
+    message="`langchain-community` is being sunset*",
+    category=DeprecationWarning,
+)
+
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_postgres import PGVector
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -12,6 +21,7 @@ try:
         RECREATE_COLLECTION,
         get_embeddings,
     )
+    from .errors import friendly_error_message
 except ImportError:
     from config import (  # type: ignore
         COLLECTION_NAME,
@@ -20,6 +30,7 @@ except ImportError:
         RECREATE_COLLECTION,
         get_embeddings,
     )
+    from errors import friendly_error_message  # type: ignore
 
 
 CHUNK_SIZE = 1000
@@ -59,4 +70,8 @@ def ingest_pdf() -> None:
 
 
 if __name__ == "__main__":
-    ingest_pdf()
+    try:
+        ingest_pdf()
+    except Exception as exc:
+        print(f"ERRO: {friendly_error_message(exc)}", file=sys.stderr)
+        sys.exit(1)

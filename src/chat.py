@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 try:
+    from .errors import friendly_error_message
     from .search import answer_question
 except ImportError:
+    from errors import friendly_error_message  # type: ignore
     from search import answer_question  # type: ignore
 
 
@@ -28,7 +30,7 @@ def main() -> None:
         try:
             answer = answer_question(question)
         except Exception as exc:
-            print(f"ERRO: {exc}\n")
+            print(f"ERRO: {friendly_error_message(exc)}\n")
             continue
 
         print(f"RESPOSTA: {answer}\n")

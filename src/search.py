@@ -7,6 +7,7 @@ from langchain_postgres import PGVector
 
 try:
     from .config import COLLECTION_NAME, DATABASE_URL, SEARCH_K, get_embeddings, get_llm
+    from .errors import friendly_error_message
 except ImportError:
     from config import (  # type: ignore
         COLLECTION_NAME,
@@ -15,6 +16,7 @@ except ImportError:
         get_embeddings,
         get_llm,
     )
+    from errors import friendly_error_message  # type: ignore
 
 
 FALLBACK_ANSWER = "Não tenho informações necessárias para responder sua pergunta."
@@ -112,4 +114,7 @@ def answer_question(question: str, k: int = SEARCH_K) -> str:
 if __name__ == "__main__":
     question = input("PERGUNTA: ").strip()
     if question:
-        print(f"RESPOSTA: {answer_question(question)}")
+        try:
+            print(f"RESPOSTA: {answer_question(question)}")
+        except Exception as exc:
+            print(f"ERRO: {friendly_error_message(exc)}")
